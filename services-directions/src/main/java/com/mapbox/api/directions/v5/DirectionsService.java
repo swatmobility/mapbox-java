@@ -23,7 +23,7 @@ public interface DirectionsService {
    * {@link MapboxDirections.Builder}.
    *
    * @param userAgent           the user agent
-   * @param user                the user
+   * @param basicAuth           the basic authentication
    * @param profile             the profile directions should use
    * @param coordinates         the coordinates the route should follow
    * @param accessToken         Mapbox access token
@@ -59,13 +59,14 @@ public interface DirectionsService {
    * @param walkwayBias         a factor that modifies the cost when encountering roads or paths
    *                            that do not allow vehicles and are set aside for pedestrian use
    * @param alleyBias           a factor that modifies the cost when alleys are encountered
+   * @param startTime           the start time
    * @return the {@link DirectionsResponse} in a Call wrapper
    * @since 1.0.0
    */
-  @GET("directions/v5/{user}/{profile}/{coordinates}")
+  @GET("{profile}/{coordinates}")
   Call<DirectionsResponse> getCall(
     @Header("User-Agent") String userAgent,
-    @Path("user") String user,
+    @Header("Authorization") String basicAuth,
     @Path("profile") String profile,
     @Path("coordinates") String coordinates,
     @Query("access_token") String accessToken,
@@ -90,7 +91,8 @@ public interface DirectionsService {
     @Query("enable_refresh") Boolean enableRefresh,
     @Query("walking_speed") Double walkingSpeed,
     @Query("walkway_bias") Double walkwayBias,
-    @Query("alley_bias") Double alleyBias
+    @Query("alley_bias") Double alleyBias,
+    @Query("start_time") String startTime
   );
 
   /**

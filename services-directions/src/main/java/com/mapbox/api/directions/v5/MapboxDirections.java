@@ -61,6 +61,10 @@ public abstract class MapboxDirections extends
     super(DirectionsService.class);
   }
 
+  public MapboxDirections(Class<DirectionsService> service) {
+    super(service);
+  }
+
   @Override
   protected Call<DirectionsResponse> initializeCall() {
     if (usePostMethod() == null) {
@@ -85,7 +89,7 @@ public abstract class MapboxDirections extends
   private Call<DirectionsResponse> get() {
     return getService().getCall(
       ApiCallHelper.getHeaderUserAgent(clientAppName()),
-      user(),
+        basicAuth(),
       profile(),
       formatCoordinates(coordinates()),
       accessToken(),
@@ -110,7 +114,8 @@ public abstract class MapboxDirections extends
       enableRefresh(),
       walkingSpeed(),
       walkwayBias(),
-      alleyBias()
+      alleyBias(),
+        startTime()
     );
   }
 
@@ -250,8 +255,11 @@ public abstract class MapboxDirections extends
     return TextUtils.join(";", coordinatesFormatted);
   }
 
-  @NonNull
+  @Nullable
   abstract String user();
+
+  @Nullable
+  abstract String basicAuth();
 
   @NonNull
   abstract String profile();
@@ -263,7 +271,7 @@ public abstract class MapboxDirections extends
   @Override
   protected abstract String baseUrl();
 
-  @NonNull
+  @Nullable
   abstract String accessToken();
 
   @Nullable
@@ -337,6 +345,9 @@ public abstract class MapboxDirections extends
 
   @Nullable
   abstract WalkingOptions walkingOptions();
+
+  @Nullable
+  abstract String startTime();
 
   @Nullable
   Double walkingSpeed() {
@@ -420,6 +431,8 @@ public abstract class MapboxDirections extends
     private Integer[] waypointIndices;
     private String[] waypointNames;
     private Point[] waypointTargets;
+    private String startTime;
+    private String basicAuth;
 
     /**
      * The username for the account that the directions engine runs on. In most cases, this should
@@ -430,7 +443,7 @@ public abstract class MapboxDirections extends
      * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public abstract Builder user(@NonNull String user);
+    public abstract Builder user(@Nullable String user);
 
     /**
      * This selects which mode of transportation the user will be using while navigating from the
@@ -443,6 +456,9 @@ public abstract class MapboxDirections extends
      */
     public abstract Builder profile(@NonNull @ProfileCriteria String profile);
 
+    public abstract Builder startTime(@NonNull String startTime);
+
+    public abstract Builder basicAuth(@Nullable String basicAuth);
     /**
      * This sets the starting point on the map where the route will begin. It is one of the
      * required parameters which must be set for a successful directions response.

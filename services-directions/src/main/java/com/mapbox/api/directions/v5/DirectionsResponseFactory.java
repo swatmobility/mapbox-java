@@ -50,6 +50,11 @@ class DirectionsResponseFactory {
     List<DirectionsRoute> routes = response.body().routes();
     List<DirectionsRoute> modifiedRoutes = new ArrayList<>();
     for (DirectionsRoute route : routes) {
+      String accessToken = "";
+      if (mapboxDirections.accessToken() != null) {
+        accessToken = mapboxDirections.accessToken();
+      }
+
       modifiedRoutes.add(route.toBuilder().routeOptions(
         RouteOptions.builder()
           .profile(mapboxDirections.profile())
@@ -73,7 +78,7 @@ class DirectionsResponseFactory {
           .steps(mapboxDirections.steps())
           .exclude(mapboxDirections.exclude())
           .voiceUnits(mapboxDirections.voiceUnits())
-          .accessToken(mapboxDirections.accessToken())
+          .accessToken(accessToken)
           .requestUuid(response.body().uuid())
           .baseUrl(mapboxDirections.baseUrl())
           .walkingOptions(mapboxDirections.walkingOptions())
